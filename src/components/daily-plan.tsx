@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import type { DailyPlan as DailyPlanType } from "@/lib/types";
 
 interface DailyPlanProps {
@@ -14,46 +13,28 @@ export function DailyPlan({ plan }: DailyPlanProps) {
     ];
 
     return (
-        <div className="space-y-4">
-            <div className="flex justify-between items-center">
-                <h3 className="text-lg font-medium text-white">
-                    {new Date(plan.date).toLocaleDateString("en-IN", {
-                        weekday: "long",
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                    })}
-                </h3>
-                <Badge
-                    variant="secondary"
-                    className="bg-green-900 text-green-100"
+        <div className="grid grid-cols-1 gap-4">
+            {mealTypes.map(({ key, label, icon }) => (
+                <Card
+                    key={key}
+                    className="transform bg-lime-50 shadow-md transition-all hover:scale-[1.02] hover:shadow-lg"
                 >
-                    Total: ₹{plan.totalCost}
-                </Badge>
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-3">
-                {mealTypes.map(({ key, label, icon }) => (
-                    <Card key={key} className="bg-gray-800 border-gray-700">
-                        <CardHeader className="pb-3">
-                            <CardTitle className="text-sm flex items-center gap-2 text-white">
-                                <span>{icon}</span>
-                                {label}
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div>
-                                <p className="font-medium text-white">
-                                    {plan.meals[key].name}
-                                </p>
-                                <p className="text-sm text-gray-400">
-                                    ₹{plan.meals[key].price}
-                                </p>
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
+                        <CardTitle className="flex items-center gap-2 text-base font-semibold text-slate-700">
+                            <span>{icon}</span>
+                            {label}
+                        </CardTitle>
+                        <div className="font-bold text-lime-700">
+                            ₹{plan.meals[key].price.toFixed(2)}
+                        </div>
+                    </CardHeader>
+                    <CardContent className="px-4 pb-4 pt-0">
+                        <p className="text-lg font-semibold text-slate-900">
+                            {plan.meals[key].name}
+                        </p>
+                    </CardContent>
+                </Card>
+            ))}
         </div>
     );
 }

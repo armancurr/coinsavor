@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,17 +23,9 @@ export function FoodItemForm({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-
-        if (!name.trim() || !price.trim()) {
-            alert("Please fill in all fields");
-            return;
-        }
-
+        if (!name.trim() || !price.trim()) return;
         const priceNum = Number.parseFloat(price);
-        if (priceNum <= 0) {
-            alert("Price must be greater than 0");
-            return;
-        }
+        if (priceNum <= 0) return;
 
         onSubmit({
             id: initialItem?.id || "",
@@ -51,35 +42,51 @@ export function FoodItemForm({
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-                <Label htmlFor="food-name">Food Item Name</Label>
+                <Label
+                    htmlFor="food-name"
+                    className="text-xs font-medium text-slate-600"
+                >
+                    Food Item Name
+                </Label>
                 <Input
                     id="food-name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g., Chicken Curry, Rice Bowl"
+                    placeholder="e.g., Chicken Curry"
                     required
+                    className="mt-1 border-slate-300 bg-slate-100"
                 />
             </div>
-
             <div>
-                <Label htmlFor="food-price">Price (INR)</Label>
+                <Label
+                    htmlFor="food-price"
+                    className="text-xs font-medium text-slate-600"
+                >
+                    Price (₹)
+                </Label>
                 <Input
                     id="food-price"
                     type="number"
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
                     placeholder="e.g., 150"
-                    min="0"
-                    step="1"
                     required
+                    className="mt-1 border-slate-300 bg-slate-100"
                 />
             </div>
-
-            <div className="flex gap-2">
-                <Button type="submit" className="flex-1">
+            <div className="flex items-center gap-4 pt-2">
+                <Button
+                    type="submit"
+                    className="flex-1 bg-slate-800 text-white hover:bg-slate-900"
+                >
                     {initialItem ? "Update Item" : "Add Item"}
                 </Button>
-                <Button type="button" variant="outline" onClick={onCancel}>
+                <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={onCancel}
+                    className="text-slate-600 hover:bg-slate-100"
+                >
                     Cancel
                 </Button>
             </div>

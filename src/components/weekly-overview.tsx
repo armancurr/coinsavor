@@ -18,14 +18,12 @@ export function WeeklyOverview({ history }: WeeklyOverviewProps) {
 
     return (
         <div className="space-y-4">
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
                 <div>
-                    <h3 className="text-lg font-medium">
-                        Last {history.length} Days
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                        Total spent: ₹{totalSpent} • Average: ₹
-                        {averageDaily.toFixed(0)}/day
+                    <h3 className="font-bold text-slate-800">History</h3>
+                    <p className="text-sm text-slate-600">
+                        Total: ₹{totalSpent.toFixed(2)} • Avg: ₹
+                        {averageDaily.toFixed(2)}/day
                     </p>
                 </div>
                 <Button
@@ -33,57 +31,33 @@ export function WeeklyOverview({ history }: WeeklyOverviewProps) {
                     size="sm"
                     onClick={() => setIsExpanded(!isExpanded)}
                 >
+                    {isExpanded ? "Hide" : "Show"}
                     {isExpanded ? (
-                        <>
-                            <ChevronUp className="h-4 w-4 mr-2" />
-                            Hide
-                        </>
+                        <ChevronUp className="ml-2 h-4 w-4" />
                     ) : (
-                        <>
-                            <ChevronDown className="h-4 w-4 mr-2" />
-                            Show Details
-                        </>
+                        <ChevronDown className="ml-2 h-4 w-4" />
                     )}
                 </Button>
             </div>
 
             {isExpanded && (
-                <div className="space-y-2">
+                <div className="space-y-2 pt-2">
                     {history
                         .slice()
                         .reverse()
-                        .map((plan, index) => (
-                            <Card key={plan.date}>
-                                <CardContent className="p-4">
-                                    <div className="flex justify-between items-start">
-                                        <div>
-                                            <p className="font-medium">
-                                                {new Date(
-                                                    plan.date,
-                                                ).toLocaleDateString("en-IN", {
-                                                    weekday: "short",
-                                                    month: "short",
-                                                    day: "numeric",
-                                                })}
-                                            </p>
-                                            <div className="text-sm text-muted-foreground mt-1">
-                                                <p>
-                                                    {plan.meals.breakfast.name}{" "}
-                                                    • {plan.meals.lunch.name} •{" "}
-                                                    {plan.meals.dinner.name}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div className="text-right">
-                                            <p className="font-medium">
-                                                ₹{plan.totalCost}
-                                            </p>
-                                            {index === 0 && (
-                                                <p className="text-xs text-muted-foreground">
-                                                    Today
-                                                </p>
+                        .map((plan) => (
+                            <Card key={plan.date} className="bg-white/70">
+                                <CardContent className="p-3">
+                                    <div className="flex items-center justify-between">
+                                        <p className="font-semibold text-slate-700">
+                                            {new Date(plan.date).toLocaleDateString(
+                                                "en-IN",
+                                                { month: "short", day: "numeric" },
                                             )}
-                                        </div>
+                                        </p>
+                                        <p className="font-bold text-lime-700">
+                                            ₹{plan.totalCost.toFixed(2)}
+                                        </p>
                                     </div>
                                 </CardContent>
                             </Card>
