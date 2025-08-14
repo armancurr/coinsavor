@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { FoodItemForm } from "@/components/food-item-form";
+import { FoodItemForm } from "@/components/management/food-item-form";
 import { Edit2, Trash2, Plus } from "lucide-react";
 import { saveFoodList } from "@/lib/storage";
 import type { FoodItem } from "@/lib/types";
