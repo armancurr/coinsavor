@@ -17,7 +17,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-    DialogDescription, // <-- Import DialogDescription for better accessibility
+    DialogDescription,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -120,10 +120,13 @@ export default function HomePage() {
         saveBudget(budget, newRemainingBudget);
     };
 
+    // --- THIS IS THE CORRECTED FUNCTION ---
     const handleBudgetUpdate = (newBudget: number) => {
         setBudget(newBudget);
         setRemainingBudget(newBudget);
         saveBudget(newBudget, newBudget);
+        // This new line closes the dialog after the budget is set
+        setIsSettingsOpen(false);
     };
 
     const handleFoodListUpdate = (newFoodList: FoodItem[]) => {
@@ -167,7 +170,6 @@ export default function HomePage() {
                             </div>
                         </div>
                         <div className="flex items-center gap-2">
-                            {/* THIS IS THE CORRECTED DIALOG SECTION */}
                             <Dialog>
                                 <DialogTrigger asChild>
                                     <Button
@@ -179,7 +181,6 @@ export default function HomePage() {
                                     </Button>
                                 </DialogTrigger>
                                 <DialogContent className="w-auto bg-white p-0">
-                                    {/* The fix is to add a header with a title, but hide it visually */}
                                     <DialogHeader className="sr-only">
                                         <DialogTitle>Calendar</DialogTitle>
                                         <DialogDescription>
@@ -194,11 +195,7 @@ export default function HomePage() {
                                     />
                                 </DialogContent>
                             </Dialog>
-                            {/* END OF CORRECTED SECTION */}
-
-                            <EmergencyExpense
-                                onDeduct={handleEmergencyDeduct}
-                            />
+                            <EmergencyExpense onDeduct={handleEmergencyDeduct} />
                             <Dialog
                                 open={isSettingsOpen}
                                 onOpenChange={setIsSettingsOpen}
@@ -220,7 +217,7 @@ export default function HomePage() {
                                         defaultValue="budget"
                                         className="flex flex-grow flex-col overflow-hidden"
                                     >
-                                        <TabsList className="mx-6 grid flex-shrink-0 grid-cols-3 items-center bg-lime-100">
+                                        <TabsList className="mx-6 grid flex-shrink-0 grid-cols-3 bg-lime-100">
                                             <TabsTrigger value="budget">
                                                 Budget
                                             </TabsTrigger>
@@ -343,7 +340,7 @@ export default function HomePage() {
                                 </h2>
                                 <p className="text-sm font-medium text-slate-600">
                                     Total:{" "}
-                                    <span className="font-bold text-black">
+                                    <span className="font-bold text-lime-700">
                                         ₹{todaysPlan.totalCost.toFixed(2)}
                                     </span>
                                 </p>
@@ -354,7 +351,7 @@ export default function HomePage() {
                 </div>
 
                 {hasPlannedForToday && (
-                    <footer className="static bottom-0 left-0 z-10 w-full border-t border-lime-300/50 bg-lime-200/80 p-4 backdrop-blur-sm">
+                    <footer className="fixed bottom-0 left-0 z-10 w-full border-t border-lime-300/50 bg-lime-200/80 p-4 backdrop-blur-sm">
                         <div className="container mx-auto max-w-md">
                             <Button
                                 disabled
