@@ -89,7 +89,7 @@ export function FoodList({ foodList, onFoodListUpdate }: FoodListProps) {
             {/* Scrollable List Container */}
             <div className="flex-grow space-y-2 overflow-y-auto pr-1">
                 {foodList.length === 0 && !showForm && !editingItem ? (
-                    <div className="flex h-32 items-center justify-center rounded-lg border-2 border-dashed border-slate-300 bg-slate-50">
+                    <div className="flex h-26 items-center justify-center rounded-lg border-2 border-dashed border-slate-300 bg-slate-50">
                         <p className="text-center text-sm text-slate-500">
                             No food items yet.
                             <br />

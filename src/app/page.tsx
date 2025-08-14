@@ -7,14 +7,17 @@ import { DailyPlan } from "@/components/daily-plan";
 import { WeeklyOverview } from "@/components/weekly-overview";
 import { ResetButton } from "@/components/reset-button";
 import { EmergencyExpense } from "@/components/emergency-expense";
+import { WeekView } from "@/components/week-view";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Calendar } from "@/components/ui/calendar";
 import {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
+    DialogDescription, // <-- Import DialogDescription for better accessibility
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -23,7 +26,12 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Loader2, Settings, UtensilsCrossed } from "lucide-react";
+import {
+    Loader2,
+    Settings,
+    UtensilsCrossed,
+    Calendar as CalendarIcon,
+} from "lucide-react";
 import { generateDailyPlan } from "@/lib/recommendation";
 import {
     getBudget,
@@ -46,26 +54,40 @@ export default function HomePage() {
     const [hasPlannedForToday, setHasPlannedForToday] = useState(false);
 
     useEffect(() => {
-        const storedBudget = getBudget();
-        const storedFoodList = getFoodList();
-        const storedHistory = getDailyHistory();
+        const loadAndSyncState = () => {
+            const storedBudget = getBudget();
+            const storedFoodList = getFoodList();
+            const storedHistory = getDailyHistory();
 
-        setBudget(storedBudget.total);
-        setRemainingBudget(storedBudget.remaining);
-        setFoodList(storedFoodList);
-        setHistory(storedHistory);
+            setBudget(storedBudget.total);
+            setRemainingBudget(storedBudget.remaining);
+            setFoodList(storedFoodList);
+            setHistory(storedHistory);
 
-        const today = new Date().toDateString();
-        const todaysHistory = storedHistory.find(
-            (plan) => new Date(plan.date).toDateString() === today,
-        );
-        if (todaysHistory) {
-            setTodaysPlan(todaysHistory);
-            setHasPlannedForToday(true);
+            const todayStr = new Date().toDateString();
+            const todaysHistory = storedHistory.find(
+                (plan) => new Date(plan.date).toDateString() === todayStr,
+            );
+
+            if (todaysHistory) {
+                setTodaysPlan(todaysHistory);
+                setHasPlannedForToday(true);
+            } else {
+                setTodaysPlan(null);
+                setHasPlannedForToday(false);
+            }
+        };
+
+        if (!isLoaded) {
+            loadAndSyncState();
+            setIsLoaded(true);
         }
 
-        setIsLoaded(true);
-    }, []);
+        window.addEventListener("focus", loadAndSyncState);
+        return () => {
+            window.removeEventListener("focus", loadAndSyncState);
+        };
+    }, [isLoaded]);
 
     const handleGeneratePlan = async () => {
         if (foodList.length === 0) {
@@ -129,8 +151,8 @@ export default function HomePage() {
     return (
         <TooltipProvider>
             <div className="min-h-screen font-sans">
-                <div className="container mx-auto max-w-md px-4 py-6">
-                    <header className="mb-6 flex items-center justify-between">
+                <div className="container mx-auto max-w-md px-4 py-6 pb-28">
+                    <header className="mb-4 flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="rounded-full bg-white p-2 shadow-sm">
                                 <UtensilsCrossed className="h-6 w-6 text-lime-600" />
@@ -145,6 +167,35 @@ export default function HomePage() {
                             </div>
                         </div>
                         <div className="flex items-center gap-2">
+                            {/* THIS IS THE CORRECTED DIALOG SECTION */}
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        size="icon"
+                                        className="border-sky-400 bg-white/50 text-sky-600 hover:bg-sky-100 hover:text-sky-700"
+                                    >
+                                        <CalendarIcon className="h-4 w-4" />
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className="w-auto bg-white p-0">
+                                    {/* The fix is to add a header with a title, but hide it visually */}
+                                    <DialogHeader className="sr-only">
+                                        <DialogTitle>Calendar</DialogTitle>
+                                        <DialogDescription>
+                                            A calendar to view dates. The
+                                            current date is selected.
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <Calendar
+                                        mode="single"
+                                        selected={new Date()}
+                                        className="rounded-md"
+                                    />
+                                </DialogContent>
+                            </Dialog>
+                            {/* END OF CORRECTED SECTION */}
+
                             <EmergencyExpense onDeduct={handleEmergencyDeduct} />
                             <Dialog
                                 open={isSettingsOpen}
@@ -167,7 +218,7 @@ export default function HomePage() {
                                         defaultValue="budget"
                                         className="flex flex-grow flex-col overflow-hidden"
                                     >
-                                        <TabsList className="mx-6 grid flex-shrink-0 grid-cols-3 bg-lime-100">
+                                        <TabsList className="mx-6 grid flex-shrink-0 grid-cols-3 items-center bg-lime-100">
                                             <TabsTrigger value="budget">
                                                 Budget
                                             </TabsTrigger>
@@ -217,6 +268,8 @@ export default function HomePage() {
                         </div>
                     </header>
 
+                    <WeekView />
+
                     {budget === 0 && (
                         <Card className="mb-6 border-dashed border-lime-500 bg-lime-100/50 text-center">
                             <CardContent className="p-6">
@@ -245,7 +298,7 @@ export default function HomePage() {
                                         Total: ₹{budget.toFixed(2)}
                                     </p>
                                 </div>
-                                <p className="mb-3 text-3xl font-bold text-lime-700">
+                                <p className="mb-3 text-3xl font-bold text-black">
                                     ₹{remainingBudget.toFixed(2)}
                                 </p>
                                 <div className="h-2 rounded-full bg-lime-300/70">
@@ -260,50 +313,35 @@ export default function HomePage() {
                         </Card>
                     )}
 
-                    <div className="mb-8">
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <div className="w-full">
-                                    <Button
-                                        onClick={handleGeneratePlan}
-                                        disabled={
-                                            isGenerating ||
-                                            foodList.length === 0 ||
-                                            remainingBudget <= 0 ||
-                                            hasPlannedForToday
-                                        }
-                                        className="w-full transform rounded-xl bg-slate-800 py-6 text-lg font-bold text-white shadow-lg transition hover:-translate-y-1 hover:bg-slate-900 disabled:translate-y-0 disabled:bg-slate-500 disabled:text-slate-300 disabled:shadow-none"
-                                    >
-                                        {isGenerating ? (
-                                            <Loader2 className="h-6 w-6 animate-spin" />
-                                        ) : hasPlannedForToday ? (
-                                            "Plan Set for Today"
-                                        ) : (
-                                            "Get Today's Plan"
-                                        )}
-                                    </Button>
-                                </div>
-                            </TooltipTrigger>
-                            {hasPlannedForToday && (
-                                <TooltipContent>
-                                    <p>
-                                        A plan has already been generated for
-                                        today.
-                                    </p>
-                                </TooltipContent>
-                            )}
-                        </Tooltip>
-                    </div>
+                    {!hasPlannedForToday && budget > 0 && (
+                        <div className="my-8">
+                            <Button
+                                onClick={handleGeneratePlan}
+                                disabled={
+                                    isGenerating ||
+                                    foodList.length === 0 ||
+                                    remainingBudget <= 0
+                                }
+                                className="w-full transform rounded-xl bg-slate-800 py-6 text-lg font-bold text-white shadow-lg transition hover:-translate-y-1 hover:bg-slate-900 disabled:translate-y-0 disabled:bg-slate-300 disabled:text-slate-500 disabled:shadow-none"
+                            >
+                                {isGenerating ? (
+                                    <Loader2 className="h-6 w-6 animate-spin" />
+                                ) : (
+                                    "Get Today's Plan"
+                                )}
+                            </Button>
+                        </div>
+                    )}
 
                     {todaysPlan && (
-                        <div className="space-y-4">
+                        <div className="mt-8 space-y-4">
                             <div className="flex items-baseline justify-between">
                                 <h2 className="text-xl font-bold text-slate-900">
                                     Today's Plan
                                 </h2>
                                 <p className="text-sm font-medium text-slate-600">
                                     Total:{" "}
-                                    <span className="font-bold text-lime-700">
+                                    <span className="font-bold text-black">
                                         ₹{todaysPlan.totalCost.toFixed(2)}
                                     </span>
                                 </p>
@@ -312,6 +350,19 @@ export default function HomePage() {
                         </div>
                     )}
                 </div>
+
+                {hasPlannedForToday && (
+                    <footer className="static bottom-0 left-0 z-10 w-full border-t border-lime-300/50 bg-lime-200/80 p-4 backdrop-blur-sm">
+                        <div className="container mx-auto max-w-md">
+                            <Button
+                                disabled
+                                className="w-full rounded-xl bg-slate-500 text-slate-300"
+                            >
+                                Plan Set for Today
+                            </Button>
+                        </div>
+                    </footer>
+                )}
             </div>
         </TooltipProvider>
     );
