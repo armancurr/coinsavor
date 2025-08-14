@@ -40,7 +40,7 @@ export function DailyPlan({ plan }: DailyPlanProps) {
           return (
             <Card key={key} className="bg-white border border-lime-600">
               <div
-                className={`relative h-36 w-full overflow-hidden rounded-t-xl ${iconClasses}`}
+                className={`relative h-44 w-full overflow-hidden rounded-t-xl ${iconClasses}`}
               >
                 <div className="absolute inset-0 grid place-items-center">
                   <Icon className="h-12 w-12 opacity-90" />

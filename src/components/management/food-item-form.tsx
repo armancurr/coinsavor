@@ -1,9 +1,7 @@
 "use client";
 
-import type React from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { FoodItem } from "@/lib/types";
 
@@ -45,67 +43,71 @@ export function FoodItemForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Name */}
       <div>
         <Label
           htmlFor="food-name"
-          className="text-xs font-medium text-slate-600"
+          className="text-slate-700 font-medium mb-2 block"
         >
           Food Item Name
         </Label>
-        <Input
+        <input
           id="food-name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="e.g., Chicken Curry"
           required
-          className="mt-1 border-slate-300 bg-slate-100"
+          className="w-full text-center text-4xl font-bold text-slate-800 bg-white border border-slate-400 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-slate-500"
         />
       </div>
+
+      {/* Price */}
       <div>
         <Label
           htmlFor="food-price"
-          className="text-xs font-medium text-slate-600"
+          className="text-slate-700 font-medium mb-2 block"
         >
           Price (₹)
         </Label>
-        <Input
+        <input
           id="food-price"
           type="number"
           value={price}
           onChange={(e) => setPrice(e.target.value)}
-          placeholder="e.g., 150"
           required
-          className="mt-1 border-slate-300 bg-slate-100"
+          className="w-full text-center text-4xl font-bold text-slate-800 bg-white border border-slate-400 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-slate-500"
         />
       </div>
+
+      {/* Description */}
       <div>
         <Label
           htmlFor="food-description"
-          className="text-xs font-medium text-slate-600"
+          className="text-slate-700 font-medium mb-2 block"
         >
           Short Description
         </Label>
-        <Input
+        <input
           id="food-description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="e.g., Rich in protein and spices"
-          className="mt-1 border-slate-300 bg-slate-100"
+          className="w-full text-center text-4xl font-bold text-slate-800 bg-white border border-slate-400 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-slate-500"
         />
       </div>
+
+      {/* Actions */}
       <div className="flex items-center gap-4 pt-2">
         <Button
           type="submit"
-          className="flex-1 bg-slate-800 text-white hover:bg-slate-900"
+          className="flex-1 bg-slate-800 text-white text-md py-4"
         >
           {initialItem ? "Update Item" : "Add Item"}
         </Button>
         <Button
           type="button"
-          variant="ghost"
+          variant="outline"
           onClick={onCancel}
-          className="text-slate-600 hover:bg-slate-100"
+          className="flex-1 bg-slate-800 text-white text-md py-4"
         >
           Cancel
         </Button>

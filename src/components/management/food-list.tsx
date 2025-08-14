@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { FoodItemForm } from "@/components/management/food-item-form";
-import { Edit2, Trash2, Plus } from "lucide-react";
+import { Edit2, Trash2, Plus, UtensilsCrossed } from "lucide-react";
 import { saveFoodList } from "@/lib/storage";
 import type { FoodItem } from "@/lib/types";
 
@@ -53,28 +53,26 @@ export function FoodList({ foodList, onFoodListUpdate }: FoodListProps) {
   };
 
   return (
-    <div className="flex h-full flex-col">
-      {/* Header Section */}
+    <div className="flex flex-col">
+      {/* Header */}
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="font-bold text-slate-800">
-          Your Food ({foodList.length})
-        </h3>
+        <div className="flex items-center gap-2"></div>
         {!showForm && !editingItem && (
           <Button
             onClick={openFormForNew}
             size="sm"
-            className="bg-slate-800 text-white hover:bg-slate-900"
+            className="bg-gradient-to-r from-lime-500 to-green-500 hover:from-lime-600 hover:to-green-600 text-white shadow-md hover:shadow-lg transition-all"
           >
-            <Plus className="mr-2 h-4 w-4" />
+            <Plus className="mr-1 h-4 w-4" />
             Add New
           </Button>
         )}
       </div>
 
-      {/* Form Section for Adding/Editing */}
+      {/* Form Section */}
       {(showForm || editingItem) && (
-        <Card className="mb-4 flex-shrink-0 bg-white">
-          <CardContent className="p-4">
+        <Card className="mb-4 border-2 border-slate-200 bg-slate-50/50 rounded-xl shadow-sm">
+          <CardContent className="p-6">
             <FoodItemForm
               initialItem={editingItem ?? undefined}
               onSubmit={editingItem ? handleEditItem : handleAddItem}
@@ -84,35 +82,38 @@ export function FoodList({ foodList, onFoodListUpdate }: FoodListProps) {
         </Card>
       )}
 
-      {/* Scrollable List Container */}
-      <div className="flex-grow space-y-2 overflow-y-auto pr-1">
+      {/* Food List TODO */}
+      <div className="space-y-2">
         {foodList.length === 0 && !showForm && !editingItem ? (
-          <div className="flex h-26 items-center justify-center rounded-lg border-2 border-dashed border-slate-300 bg-slate-50">
+          <div className="flex h-26 items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50">
             <p className="text-center text-sm text-slate-500">
               No food items yet.
-              <br />
-              Click 'Add New' to start.
             </p>
           </div>
         ) : (
           foodList.map((item) => (
             <Card
               key={item.id}
-              className="bg-white transition-all hover:bg-slate-50"
+              className="bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md transition-all"
             >
-              <CardContent className="flex items-center justify-between p-3">
+              <CardContent className="flex items-center justify-between p-4">
                 <div>
                   <h4 className="font-semibold text-slate-800">{item.name}</h4>
                   <p className="text-sm font-medium text-lime-700">
                     ₹{item.price.toFixed(2)}
                   </p>
+                  {item.description && (
+                    <p className="text-xs text-slate-500 mt-1">
+                      {item.description}
+                    </p>
+                  )}
                 </div>
                 <div className="flex gap-1">
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => openFormForEdit(item)}
-                    className="h-8 w-8 text-slate-500 hover:bg-slate-200 hover:text-slate-700"
+                    className="h-8 w-8 text-slate-500 hover:bg-slate-200 hover:text-slate-700 rounded-lg"
                   >
                     <Edit2 className="h-4 w-4" />
                   </Button>
@@ -120,7 +121,7 @@ export function FoodList({ foodList, onFoodListUpdate }: FoodListProps) {
                     variant="ghost"
                     size="icon"
                     onClick={() => handleDeleteItem(item.id)}
-                    className="h-8 w-8 text-red-500 hover:bg-red-100 hover:text-red-600"
+                    className="h-8 w-8 text-red-500 hover:bg-red-100 hover:text-red-600 rounded-lg"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -12,11 +10,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import { BudgetInput } from "@/components/management/budget";
 import { FoodList } from "@/components/management/food-list";
-import { WeeklyOverview } from "@/components/calendar/weekly-overview";
-import { EmergencyExpense } from "@/components/emergency/emergency-expense";
+import { WeeklyOverview } from "@/components/calendar/week-overview";
+import { EmergencyExpense } from "@/components/emergency/emergency-card";
+import { DailyPlan } from "@/components/food-card";
 import {
   SketchLogo,
   CaretRight,
@@ -94,7 +93,10 @@ export function SettingsSheet({ onBudgetUpdate }: SettingsSheetProps) {
         </button>
       </SheetTrigger>
 
-      <SheetContent side="right" className="w-full sm:max-w-md">
+      <SheetContent
+        side="right"
+        className="w-full sm:max-w-md bg-gradient-to-b from-lime-50 via-lime-200 to-lime-300"
+      >
         <SheetHeader className="pb-4">
           <SheetTitle className="flex items-center gap-2 text-lime-900">
             <SketchLogo size={20} weight="fill" className="text-lime-600" />
@@ -102,144 +104,108 @@ export function SettingsSheet({ onBudgetUpdate }: SettingsSheetProps) {
           </SheetTitle>
         </SheetHeader>
 
-        <Tabs defaultValue="emergency" className="flex flex-col h-full">
-          <TabsList className="grid grid-cols-4 bg-lime-100 mb-4">
-            <TabsTrigger value="emergency" className="text-xs p-2">
-              <Fire size={16} weight="fill" className="text-amber-600" />
-            </TabsTrigger>
-            <TabsTrigger value="calendar" className="text-xs p-2">
-              <CalendarBlank
-                size={16}
-                weight="fill"
-                className="text-indigo-600"
-              />
-            </TabsTrigger>
-            <TabsTrigger value="management" className="text-xs p-2">
-              <GearSix size={16} weight="fill" className="text-neutral-700" />
-            </TabsTrigger>
-            <TabsTrigger value="overview" className="text-xs p-2">
-              Overview
-            </TabsTrigger>
-          </TabsList>
-
-          <div className="flex-1 overflow-hidden">
-            <TabsContent
-              value="emergency"
-              className="h-full overflow-y-auto mt-0"
-            >
-              <div className="space-y-6">
-                <div className="text-center">
-                  <h3 className="text-lg font-semibold text-slate-900 mb-2">
-                    Emergency Expense
-                  </h3>
-                  <p className="text-sm text-slate-500 mb-6">
-                    Quick deduction from your budget
-                  </p>
-                </div>
-
-                <div className="flex justify-center">
-                  <EmergencyExpense onDeduct={handleEmergencyDeduct} />
-                </div>
-
-                <Card className="bg-slate-50">
-                  <CardContent className="p-4">
-                    <h4 className="font-medium text-slate-700 mb-2">
-                      Current Budget
-                    </h4>
-                    <div className="text-2xl font-bold text-lime-700">
-                      ₹{remainingBudget.toFixed(2)}
-                    </div>
-                    <p className="text-sm text-slate-500">remaining</p>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-
-            <TabsContent
-              value="calendar"
-              className="h-full overflow-y-auto mt-0"
-            >
-              <div className="space-y-4">
-                <div className="text-center">
-                  <h3 className="text-lg font-semibold text-slate-900 mb-2">
-                    Calendar
-                  </h3>
-                  <p className="text-sm text-slate-500 mb-4">
-                    View your planning calendar
-                  </p>
-                </div>
-
-                <Card>
-                  <CardContent className="p-4">
-                    <Calendar
-                      mode="single"
-                      selected={new Date()}
-                      className="rounded-md w-full"
-                    />
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-
-            <TabsContent
-              value="management"
-              className="h-full overflow-y-auto mt-0"
-            >
-              <Tabs defaultValue="budget" className="h-full">
-                <TabsList className="grid grid-cols-2 bg-slate-100 mb-4">
-                  <TabsTrigger value="budget">Budget</TabsTrigger>
-                  <TabsTrigger value="food">Food</TabsTrigger>
-                </TabsList>
-
-                <div className="h-full overflow-hidden">
-                  <TabsContent
-                    value="budget"
-                    className="h-full overflow-y-auto mt-0"
-                  >
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-slate-900">
-                        Budget Management
-                      </h3>
-                      <BudgetInput
-                        currentBudget={budget}
-                        onBudgetUpdate={handleBudgetUpdate}
-                      />
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent
-                    value="food"
-                    className="h-full overflow-y-auto mt-0"
-                  >
-                    <div className="h-full">
-                      <h3 className="text-lg font-semibold text-slate-900 mb-4">
-                        Food Management
-                      </h3>
-                      <div className="h-[calc(100%-3rem)]">
-                        <FoodList
-                          foodList={foodList}
-                          onFoodListUpdate={onFoodListUpdate}
-                        />
-                      </div>
-                    </div>
-                  </TabsContent>
-                </div>
-              </Tabs>
-            </TabsContent>
-
-            <TabsContent
-              value="overview"
-              className="h-full overflow-y-auto mt-0"
-            >
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-slate-900">
-                  Weekly Overview
+        <div className="flex-1 overflow-y-auto">
+          <div className="space-y-4 px-4">
+            {/* 1. Emergency Expense Component */}
+            <Card className="bg-lime-50 border border-lime-600">
+              <CardContent className="p-6">
+                {/* Title */}
+                <h3 className="font-semibold text-slate-900 mb-1">
+                  Emergency Expense
                 </h3>
-                <WeeklyOverview history={history} />
-              </div>
-            </TabsContent>
+                {/* Description */}
+                <p className="text-sm text-slate-600 mb-4">
+                  Enter the amount you want to deduct from your budget for
+                  emergencies like eating crap.
+                </p>
+
+                {/* Big Input Field */}
+                <input
+                  type="number"
+                  className="w-full text-center text-4xl font-bold text-slate-800 bg-white border border-slate-400 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-slate-500"
+                  onChange={(e) =>
+                    handleEmergencyDeduct(Number(e.target.value))
+                  }
+                />
+
+                {/* Remaining Budget */}
+                <div className="mt-4">
+                  <p className="text-sm text-slate-600 text-center">
+                    Remaining Budget
+                  </p>
+                  <p className="text-lg font-bold text-lime-700 text-center">
+                    ₹{remainingBudget.toFixed(2)}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* 2. Budget Management Component */}
+            <Card className="bg-lime-50 border border-lime-600">
+              <CardContent className="p-6">
+                <BudgetInput
+                  currentBudget={budget}
+                  onBudgetUpdate={handleBudgetUpdate}
+                />
+              </CardContent>
+            </Card>
+
+            {/* 3. Food Budget List Component */}
+            <Card className="bg-lime-50 border border-lime-600">
+              <CardContent className="p-6">
+                {/* Title */}
+                <h3 className="font-semibold text-slate-900 mb-1">
+                  Food Budget List
+                </h3>
+                {/* Description */}
+                <p className="text-sm text-slate-600 mb-4">
+                  Manage your food items and their prices for budget planning.
+                </p>
+
+                {/* Food List Container */}
+                <div>
+                  <FoodList
+                    foodList={foodList}
+                    onFoodListUpdate={onFoodListUpdate}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* 4. Calendar Component */}
+            <Card className="bg-lime-50 border border-lime-600">
+              <CardContent className="p-6">
+                {/* Title */}
+                <h3 className="font-semibold text-slate-900 mb-1">Calendar</h3>
+                {/* Description */}
+                <p className="text-sm text-slate-600 mb-4">
+                  View your planning calendar to track your daily meal plans.
+                </p>
+
+                {/* Calendar Container */}
+                <div className="bg-white rounded-lg p-4">
+                  <Calendar
+                    mode="single"
+                    selected={new Date()}
+                    className="rounded-md w-full"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* <Card className="bg-lime-50 border border-lime-600">
+               <CardContent className="p-6">
+                 <h3 className="font-semibold text-slate-900 mb-1">
+                   Overview History
+                 </h3>
+                 <p className="text-sm text-slate-600 mb-4">
+                   View your spending history and track your daily expenses.
+                 </p>
+                 <WeeklyOverview history={history} />
+               </CardContent>
+             </Card> */}
           </div>
-        </Tabs>
+        </div>
       </SheetContent>
     </Sheet>
   );

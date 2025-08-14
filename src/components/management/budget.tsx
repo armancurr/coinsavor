@@ -1,8 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useState } from "react";
 
 interface BudgetInputProps {
@@ -26,20 +24,28 @@ export function BudgetInput({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Title & Description */}
       <div>
-        <Label htmlFor="monthly-budget" className="text-slate-600">
-          Your Monthly Budget (₹)
-        </Label>
-        <Input
-          id="monthly-budget"
-          type="number"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          placeholder="e.g., 5000"
-          className="mt-1 bg-slate-100"
-        />
+        <h3 className="font-semibold text-slate-900 mb-1">Budget Management</h3>
+        <p className="text-sm text-slate-600 mb-4">
+          Set your monthly budget to track and manage your expenses.
+        </p>
       </div>
-      <Button type="submit" className="w-full bg-slate-800 text-white">
+
+      {/* Big Input Field (identical to Emergency Expense) */}
+      <input
+        type="number"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        className="w-full text-center text-4xl font-bold text-slate-800 bg-white border border-slate-400 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-slate-500"
+      />
+
+      {/* Submit Button */}
+      <Button
+        size="sm"
+        type="submit"
+        className="w-full bg-slate-800 text-white text-md py-6"
+      >
         Set Budget
       </Button>
     </form>

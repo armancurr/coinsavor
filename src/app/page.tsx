@@ -7,7 +7,7 @@ import { SettingsSheet } from "@/components/settings-sheet";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Spinner } from "@phosphor-icons/react";
+import { Spinner, Carrot } from "@phosphor-icons/react";
 import { generateDailyPlan } from "@/lib/recommendation";
 import {
   getBudget,
@@ -114,11 +114,19 @@ export default function HomePage() {
           <WeekView />
 
           {budget === 0 && (
-            <Card className="mb-6 border-dashed border-lime-500 bg-lime-100/50 text-center">
+            <Card className="mb-6 border border-lime-500 bg-lime-50 text-center">
               <CardContent className="p-6">
-                <p className="mb-3 text-slate-700">Set your budget to start</p>
+                <div className="mb-3 flex justify-center">
+                  <Carrot className="h-8 w-8 text-lime-600" />
+                </div>
+                <p className="text-xl font-semibold text-lime-950 mb-2">
+                  Set budget to start
+                </p>
                 <p className="text-sm text-slate-500">
-                  Click on coinsavor above to open settings
+                  Click on{" "}
+                  <span className="font-semibold text-lime-950">coinsavor</span>{" "}
+                  above to open settings and set your budget, for food items and
+                  emergency expenses.
                 </p>
               </CardContent>
             </Card>
