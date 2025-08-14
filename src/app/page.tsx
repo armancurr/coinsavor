@@ -196,7 +196,9 @@ export default function HomePage() {
                             </Dialog>
                             {/* END OF CORRECTED SECTION */}
 
-                            <EmergencyExpense onDeduct={handleEmergencyDeduct} />
+                            <EmergencyExpense
+                                onDeduct={handleEmergencyDeduct}
+                            />
                             <Dialog
                                 open={isSettingsOpen}
                                 onOpenChange={setIsSettingsOpen}

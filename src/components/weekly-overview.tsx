@@ -50,10 +50,12 @@ export function WeeklyOverview({ history }: WeeklyOverviewProps) {
                                 <CardContent className="p-3">
                                     <div className="flex items-center justify-between">
                                         <p className="font-semibold text-slate-700">
-                                            {new Date(plan.date).toLocaleDateString(
-                                                "en-IN",
-                                                { month: "short", day: "numeric" },
-                                            )}
+                                            {new Date(
+                                                plan.date,
+                                            ).toLocaleDateString("en-IN", {
+                                                month: "short",
+                                                day: "numeric",
+                                            })}
                                         </p>
                                         <p className="font-bold text-lime-700">
                                             ₹{plan.totalCost.toFixed(2)}

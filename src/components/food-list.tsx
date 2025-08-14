@@ -79,7 +79,9 @@ export function FoodList({ foodList, onFoodListUpdate }: FoodListProps) {
                     <CardContent className="p-4">
                         <FoodItemForm
                             initialItem={editingItem ?? undefined}
-                            onSubmit={editingItem ? handleEditItem : handleAddItem}
+                            onSubmit={
+                                editingItem ? handleEditItem : handleAddItem
+                            }
                             onCancel={closeForms}
                         />
                     </CardContent>
@@ -123,7 +125,9 @@ export function FoodList({ foodList, onFoodListUpdate }: FoodListProps) {
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        onClick={() => handleDeleteItem(item.id)}
+                                        onClick={() =>
+                                            handleDeleteItem(item.id)
+                                        }
                                         className="h-8 w-8 text-red-500 hover:bg-red-100 hover:text-red-600"
                                     >
                                         <Trash2 className="h-4 w-4" />
