@@ -1,24 +1,34 @@
 # Coinsavor
 
-Mobile-first gamified food budgeting that keeps your wallet happy. Coinsavor transforms the mundane task of food budgeting into an engaging, game-like experience. Built with a mobile-first approach, this application delivers randomized daily meal plans while maintaining strict spending limits through streak tracking and gamification mechanics.
+Mobile-first gamified food budgeting app that provides randomized daily meal plans, streak tracking, and monthly spending limits so your broke ass don't get broker. Coinsavor transforms food budgeting into a game. Instead of boring spreadsheets, you get daily meal plans that fit your budget, streak counters that motivate you to stay on track, and spending limits that actually work.
 
-## Key Features
+## Features
 
-### Intelligent Meal Planning
-Randomized daily meal suggestions that adapt to your budget constraints and dietary preferences, ensuring variety without financial strain.
+1. **Randomized Daily Meal Plans**  
+Get fresh meal suggestions every day that match your budget and taste preferences.
 
-### Streak Tracking System
-Build momentum with consecutive days of staying within budget. Watch your streaks grow as you develop sustainable spending habits.
+2. **Streak Tracking**  
+Build momentum by staying within budget. Watch your streak grow and develop better spending habits.
 
-### Monthly Budget Management
-Set realistic monthly spending limits with intelligent alerts and recommendations to prevent budget overruns before they happen.
+3. **Smart Budget Limits**  
+Set monthly spending caps with alerts before you overspend.
 
-### Gamification Engine
-Transform budgeting from a chore into an achievement system with progress tracking, milestone rewards, and visual feedback.
+4. **Gamified Experience**  
+Turn budgeting into achievements with progress tracking and milestone rewards.
 
-## Installation
+## Contributing
 
-### Setup Process
+Want to help make Coinsavor better? Here's how:
+
+1. Fork this repository
+2. Create a new branch for your feature
+3. Make your changes and test them
+4. Submit a pull request with a clear description
+
+We welcome bug fixes, new features, and documentation improvements.
+
+## Installation & Setup
+
 ```bash
 # Clone the repository
 git clone https://github.com/armancurr/coinsavor.git
@@ -29,44 +39,14 @@ cd coinsavor
 # Install dependencies
 bun install
 
-# Start local server
+# Create environment file
+cp .env.example .env.local
+# Edit .env.local with your database URL
+
+# Setup database
+bun run db:migrate
+bun run db:seed
+
+# Start the development server
 bun dev
 ```
-
-## Configuration
-
-### Environment Variables
-Create a `.env.local` file in the root directory:
-```bash
-DATABASE_URL=postgresql://username:password@localhost:5432/coinsavor
-```
-
-### Database Setup
-```bash
-# Run migrations
-bun run db:migrate
-
-# Seed initial data
-bun run db:seed
-```
-
-### Build Process
-```bash
-# Development build
-bun run build:dev
-
-# Production build
-bun run build:prod
-```
-
-## Contributing
-
-### Development Guidelines
-1. Fork the repository and create feature branches
-2. Follow conventional commit message format
-3. Ensure test coverage for new functionality
-4. Submit pull requests with detailed descriptions
-
-## License
-
-MIT License - see [LICENSE.md](LICENSE.md) for complete terms and conditions.
